@@ -1,0 +1,304 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+\usepackage{amsmath,amscd,amsbsy,amssymb,latexsym,url,bm,amsthm}
+\usepackage{epsfig,graphicx,subfigure}
+\usepackage{enumitem,balance,mathtools}
+\usepackage{wrapfig}
+\usepackage{mathrsfs, euscript}
+\usepackage[usenames]{xcolor}
+\usepackage{hyperref}
+%\usepackage{algorithm}
+%\usepackage{algorithmi
+%\usepackage[vlined,ruled,commentsnumbered,linesnumbered]{algorithm2e}
+\usepackage[ruled,vlined,boxed,linesnumbered]{algorithm2e}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{exercise}{Exercise}[section]
+\newtheorem*{solution}{Solution}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\postscript}[2]
+ {\setlength{\epsfxsize}{#2\hsize}
+  \centerline{\epsfbox{#1}}}
+
+\renewcommand{\baselinestretch}{1.0}
+
+\setlength{\oddsidemargin}{-0.365in}
+\setlength{\evensidemargin}{-0.365in}
+\setlength{\topmargin}{-0.3in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{10.1in}
+\setlength{\textwidth}{7in}
+\makeatletter \renewenvironment{proof}[1][Proof] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\makeatletter
+\renewenvironment{solution}[1][Solution] {\par\pushQED{\qed}\normalfont\topsep6\p@\@plus6\p@\relax\trivlist\item[\hskip\labelsep\bfseries#1\@addpunct{.}]\ignorespaces}{\popQED\endtrivlist\@endpefalse} \makeatother
+\begin{document}
+\noindent
+
+%========================================================================
+\noindent\framebox[\linewidth]{\shortstack[c]{
+\Large{\textbf{CS222 Homework 3}}\vspace{1mm}\\
+Exercises for Algorithm Design and Analysis by Li Jiang, 2016 Autumn Semester\\
+5140309507 林禹臣 yuchenlin@sjtu.edu.cn}}
+
+~\\
+\begin{enumerate}
+\item You are given coins of different denominations and a total amount of money amount.
+
+Write a function to compute the fewest number of coins that you need to make up that amount.
+
+If that amount of money cannot be made up by any combination of the coins, return -1.
+% Example 1:
+
+% coins = [1, 2, 5], amount = 11
+
+% return 3 (11 = 5 + 5 + 1)
+
+% Example 2:
+
+% coins = [2], amount = 3
+
+% return -1.
+
+Input:
+
+int coins[];
+
+int n: length of coins[];
+
+int amount;
+
+Output:
+
+int num;
+
+%Your answer should be written here.
+\begin{solution}
+It is a typical Knapsack Problem, which can be easily solved with a dynamic programming strategy. \\
+We can define a state $i$ of this problem means that the answer when the $amount=i$. Then, we can simply fill the state space and return the state when $amount=amount$. The time complexity of this simple Algorithm~\ref{alg:alg1} is $O(amount*n)$.
+
+
+\begin{algorithm} 
+  \label{alg:alg1}
+  \caption{Compute the fewest number of coins.} 
+  \KwIn{int $coins[]$,int $n$, int $amount$} 
+  \KwOut{int the minimum of the number of coins}
+  Initialize all state[] is INF.
+  $state[0] = 0$;\\
+  \For{$1 \le i \le amount$}{
+  	\For{each c in coins which $\le i$}{
+  		$state[i] = min\{state[i],~state[i-c]+1\};$\\
+  	}
+  } 
+  Change state[amount] to be -1 if it is INF.\\
+  \Return state[amount];
+\end{algorithm}
+~\\
+~\\
+
+\end{solution}
+
+\pagebreak
+
+~\\
+~\\
+~\\
+~\\
+
+\item Given a string s, partition s such that every substring of the partition is a palindrome.
+
+Return the minimum cuts needed for a palindrome partitioning of s.
+
+For example, given s = "aab",
+
+Return 1 since the palindrome partitioning ["aa","b"] could be produced using 1 cut.
+
+Input:
+
+string s;
+
+Output:
+
+int cuts;
+
+%Your answer should be written here.
+
+\begin{solution}
+
+Obviously, this problem is similar to the RNA problem we talked about in the course. This is a typical Interval Dynamic Programming problem, in which we usually have to expand our state space into a 2-dimensional space. This problem is not that simple, however, we can still use an 1-dimensional array to save the states we need and use a 2-dimensional array to save the middle result so that we can reuse them.\\
+
+We define that $Res[i]$ means the result from $i$ to $n$, and thus we can simply return the $Res[0]$ as the final result. Meanwhile, we can define a boolean array $isP[i,j]$ to indicate whether $s[i]...s[j]$ is a palindrome, which we may reuse more than once.\\
+
+Here~\ref{alg:alg2} is the detailed algorithm and its time complexity is $O(n^2)$ evidently.\\
+
+
+\begin{algorithm} 
+  \label{alg:alg2}
+  \caption{Compute the mini cut number to build all palindrome.} 
+  \KwIn{String $s$,~int $n$ (the length of s)} 
+  \KwOut{int the minimum of the number of cuts}
+  Initialize all res[n] is 0.\\
+  Initialize all isP[n,n] is $False$.\\
+  $state[0] = 0$;\\
+  \For{$n-1 \ge i \ge 0$}{
+  	$res[i] = n-1-i;$ \\
+  	\For{$i \le j \le n-1$}{
+  		\If{(s[i]==s[j]) AND (~$isP[j+1,i-1]$~OR~$i-j \le 1$)}{
+  			$isP[i,j]=True;$\\
+  			\If{$j==n-1$}{
+  				$res[i] = 0;$\\
+  			}\Else{
+   				$res[i] = min\{~res[i],~res[j+1]+1~\};$\\
+   			}
+  		}
+  	}
+  } 
+  \Return res[0];
+\end{algorithm}
+
+
+\end{solution}
+
+~\\
+~\\
+~\\
+~\\
+
+\item Given two arrays of length m and n with digits 0-9 representing two numbers.
+
+Create the maximum number of length $ k \leq m + n $ from digits of the two.
+
+The relative order of the digits from the same array must be preserved.
+
+Return an array of the k digits.
+
+You should try to optimize your time and space complexity.
+
+% Example 1:
+
+% nums1 = [3, 4, 6, 5]
+
+% nums2 = [9, 1, 2, 5, 8, 3]
+
+% k = 5
+
+% return [9, 8, 6, 5, 3]
+
+% Example 2:
+
+% nums1 = [6, 7]
+
+% nums2 = [6, 0, 4]
+
+% k = 5
+
+% return [6, 7, 6, 0, 4]
+
+% Example 3:
+
+% nums1 = [3, 9]
+
+% nums2 = [8, 9]
+
+% k = 3
+
+% return [9, 8, 9]
+
+Input:
+
+int nums1[], int m;
+
+int nums2[], int n;
+
+int k;
+
+Output:
+
+int nums[];
+
+%Your answer should be written here.
+\begin{solution}
+
+Actually, this problem can be seen as a select-and-merge process. Every possible solution is just select $x$ from $m$ elements and $k-x$ from $n$ elements, and then we just merge $x$ and $k-x$ without breaking the original ordering.\\
+
+But how should we select $x,y$ form $m,n$ elements so that we can build a maximum result? I could not find a smart way, but the simple way is to try every possible combination. This is to say, we can iterate $x$ from 0 to $min(m,k)$. In each selecting step, we can just find a non-ascending subsequence of $num1[]$ or $num2[]$.\\
+Here~\ref{alg:alg3} is the algorithm and the time complexity of it is $O(n^2)$.\\
+Since the inner merge and getSub function is up to $O(n)$ and the outer loop executes $O(n)$ times.\\
+Note, here we can compare the two array in a python way, in which nums1>nums2 means the number combined by nums1 is greater than that by nums2.
+\pagebreak
+
+\begin{algorithm} 
+  \label{alg:alg3}
+  \caption{Compute the k-maximum from the two array.} 
+  \KwIn{int $nums1[],nums2[],m,n,k$} 
+  \KwOut{int $max$}
+  % \begin{bf}  def getMaxResult(nums1,nums2,m,n,k)\end{bf} \{ \\
+  		$res = [];$\\
+  		\For{$max(0, k - n) \le x \le min(k, m)$}{
+  			$tmp$ = $merge(~getSub(nums1,x),~getSub(nums2,k-x)~)$;\\
+  			Update $res$ if $tmp$ is greater;\\
+  		}
+  \}\\
+  \Return $res$;
+\end{algorithm}
+
+
+
+
+
+\begin{algorithm} 
+  \label{alg:alg4}
+  \caption{Get the non-ascending x-sized subsequence of an n-sized array} 
+  \KwIn{int $arr[],n,x$} 
+  \KwOut{int $sub[]$}
+
+	$sub$ = new~stack~of~int;\\
+	\For{$ 0 \le t \le n-1$}{
+		\While{ (not sub.empty()) AND sub.size()+(n-t)>x AND arr[t]>sub.top() }{
+			sub.pop();
+		}
+		sub.push(arr[t]);
+	}
+  \}\\
+  \Return $sub$;
+\end{algorithm}
+
+\begin{algorithm} 
+  \label{alg:alg5}
+  \caption{Merge the two sub-sequences} 
+  \KwIn{int $sub1[],sub2[],m,n$} 
+  \KwOut{int $merged[]$}
+  		$merged$ = [];\\
+	\While{sub1 is not empty OR sub2 is not empty}{
+		\If{sub1 > sub2}{
+			merged.append(sub1[0])
+			sub1.delete(0)
+		}\Else{
+			merged.append(sub2[0])
+			sub2.delete(0)
+		}
+	}
+  \Return $merged$;
+\end{algorithm}
+
+
+
+
+
+
+
+\end{solution}
+
+
+~\\
+~\\
+
+
+\end{enumerate}
+%========================================================================
+\end{document}
