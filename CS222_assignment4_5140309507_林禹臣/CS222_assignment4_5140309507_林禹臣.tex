@@ -7,6 +7,7 @@
 \usepackage{mathrsfs, euscript}
 \usepackage[usenames]{xcolor}
 \usepackage{hyperref}
+\usepackage{listings} 
 %\usepackage{algorithm}
 %\usepackage{algorithmi
 %\usepackage[vlined,ruled,commentsnumbered,linesnumbered]{algorithm2e}
@@ -77,10 +78,12 @@ The problem is to find the minimum of the $F(T)$. This reminds me of one of the 
 \emph{Step 2.} Calculate $F(M)$.\\
 \emph{Step 3.} Return $F(M)$ as the final result.\\
 
-The time complexity of \emph{Step 1} can be $O(n)$ with a divide-and-conquer strategy, which I have mentioned in the \emph{Assignment 2}. The time complexity of \emph{Step 2} is obviously $O(n)$ and \emph{Step 3} is $O(1)$. Therefore, the total time complexity is $O(n)$.
-
+The time complexity of \emph{Step 1} can be $O(n)$ with a divide-and-conquer strategy, which I have mentioned in the \emph{Assignment 2}. The time complexity of \emph{Step 2} is obviously $O(n)$ and \emph{Step 3} is $O(1)$. Therefore, the total time complexity is $O(n)$.\\
 Now, let us prove the above-mentioned statement that Median minimizes the sum of Absolute Deviations.\\
+\\
 First of all, I would like to point out some wrong or weak statements. Some say that we must choose the final $T$ from the elements in the array to minimize the $F(T)$, which is definitely wrong for that if the length is even and then we can choose any number between the middle two elements as the final T. Also, some say that choosing average can cause wrong output, then median is the optimal choice. It is just a guess, not a mathematical proof. \\
+
+Following are my two proofs.
 \pagebreak
 \\\\
 
@@ -136,6 +139,28 @@ return the length of the longest substring.
 
 %Your answer should be written here.
 
+\begin{solution}
+Intuitively, if there is no restraint k, we will first find out the most common char and replace all other char to the most common one to achieve the longest substring. Thus, the times of replacement will be $n-t$, assuming that the most common char occurs $t$ times. \\ \\ Now we have a restriction that the time of replacement should be less than or equal to $k$. Accordingly, we can conclude that if the original substring of the final result substring is $s[L,H]$ then we have $H-L-t \le k$.\\ \\
+Thus, our task is to find the largest $H-L$ satisfying hat $H-L-t \le k$. It is a typical Sliding Window Problem. We can consider $[L,H]$ is a window which satisfies the condition. We always intend to expand this window and return the largest length as the output result. Specifically, we just iterate the $H$ from $0$ to $N$, and in each loop we try to keep expand the windows according to the condition and if the condition cannot be satisfied we just need to increase our $L$.\\ \\
+As to the time complexity, we can find that it's evidently $O(n)$ for it only have one layer loop.
+\\ Python code is as follows:
+
+
+\begin{lstlisting}[language=Python] 
+def characterReplacement(self, s, k):
+    L = H = 0
+    counter = collections.Counter()
+    for H in range(1, len(s)+1):
+        counter[s[H-1]] += 1
+        t = counter.most_common(1)[0][1]
+        if H - L - t > k:
+            counter[s[L]] -= 1
+            L += 1
+    return H - L
+\end{lstlisting} 
+
+\end{solution}
+
 ~\\
 ~\\
 
@@ -144,33 +169,6 @@ return the length of the longest substring.
 
 Write a one-pass algorithm with O(1) extra space to determine, if your path crosses itself, or not.
 
-Example 1:
-
-Given x = [2, 1, 1, 2]
-
-Return true (self crossing)
-
-Example 2:
-
-Given x = [1, 2, 3, 4]
-
-Return false (not self crossing)
-
-Example 3:
-
-Given x = [1, 1, 1, 1]
-
-Return true (self crossing)
-
-Input:
-
-int x[]: the input array.
-
-int N: length of x.
-
-Output:
-
-return true or false.
 
 %Your answer should be written here.
 
