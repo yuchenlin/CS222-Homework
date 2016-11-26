@@ -171,7 +171,45 @@ Write a one-pass algorithm with O(1) extra space to determine, if your path cros
 
 
 %Your answer should be written here.
+\begin{solution}
 
+If we draw all the crossing situations we can come up with on the paper, we can simply conclude that there are only two cases as follows:
+
+\begin{lstlisting}[language=Python] 
+
+            b                              b
+   ------------------             ------------------
+   |                |             |                |
+   |                |             |                | a
+ c |                |           c |                |
+   |                | a           |                |    f
+   ------------------->>          |              <<---------
+            d       |             |                |      | e
+                    |             |                       |
+                                  -------------------------
+                                               d
+
+           (1)                                  (2)
+
+    d>=b && a>=c               d>=b && c>=a && e>=c-a && c>=e && f>=d-b 
+\end{lstlisting}
+
+Although sometimes the situations are not exactly like these two, we can still simply rotate the graph and fit into these two situations.
+
+Thus, we just need to check whether every 6 consecutive steps satisfy the according conditions or not. Following is a simple Python Code:
+
+
+\begin{lstlisting}[language=Python] 
+b = c = d = e = 0
+for a in x:
+    if d >= b && b>0 && (a >= c || (c>=e && e>=c-a && f >= d-b)):
+        return True
+    b, c, d, e, f = a, b, c, d, e
+return False
+
+\end{lstlisting}
+
+\end{solution}
 ~\\
 ~\\
 
