@@ -194,9 +194,8 @@ If we draw all the crossing situations we can come up with on the paper, we can 
     d>=b && a>=c               d>=b && c>=a && e>=c-a && c>=e && f>=d-b 
 \end{lstlisting}
 
-Although sometimes the situations are not exactly like these two, we can still simply rotate the graph and fit into these two situations.
-
-Thus, we just need to check whether every 6 consecutive steps satisfy the according conditions or not. Following is a simple Python Code:
+Although sometimes the situations are not exactly like these two, we can still simply rotate the graph and fit into these two situations. Note that $f$ can be $0$ and the $e$ can be exact $c-a$.
+Thus, we just need to check whether every 6 consecutive steps satisfy the according conditions or not. \\Following is a simple Python Code:
 
 
 \begin{lstlisting}[language=Python] 
