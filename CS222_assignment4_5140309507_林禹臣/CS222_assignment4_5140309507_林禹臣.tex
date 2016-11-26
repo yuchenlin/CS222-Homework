@@ -80,7 +80,7 @@ The problem is to find the minimum of the $F(T)$. This reminds me of one of the 
 The time complexity of \emph{Step 1} can be $O(n)$ with a divide-and-conquer strategy, which I have mentioned in the \emph{Assignment 2}. The time complexity of \emph{Step 2} is obviously $O(n)$ and \emph{Step 3} is $O(1)$. Therefore, the total time complexity is $O(n)$.
 
 Now, let us prove the above-mentioned statement that Median minimizes the sum of Absolute Deviations.\\
-First of all, I would like to point out some wrong or weak statements. Some say that we must choose the final $T$ from the elements in the array to minimize the $F(T)$, which is definitely wrong for that if the length is even and then we can choose any number between the middle two elements as the final T. Also, some say that choosing average can cause wrong output, then median is the optimal choice. It is just a guess, not a mathematical proof.\\
+First of all, I would like to point out some wrong or weak statements. Some say that we must choose the final $T$ from the elements in the array to minimize the $F(T)$, which is definitely wrong for that if the length is even and then we can choose any number between the middle two elements as the final T. Also, some say that choosing average can cause wrong output, then median is the optimal choice. It is just a guess, not a mathematical proof. \\
 \pagebreak
 \\\\
 
@@ -112,8 +112,7 @@ x_1 \le x_2 \le ... \le x_s\le... \le T \le...\le x_{t-1} \le x_t = M \le x_{t+1
 &= \sum_{i=1}^{t-1}(M-x_i) +  \sum_{i=t+1}^{N}(x_i-M) + 2\sum_{i=s+1}^{t}(x_i) - 2(t-s)*T\\
 \end{split}&
 \end{flalign}
-Thus, if we want to minimize the $F(T)$, we just need to maximize $T$, which means when $T=M$ we can get the minimum of $F(T)$.
-
+Thus, if we want to minimize the $F(T)$, we just need to maximize $T$, which means when $T=M$ we can get the minimum of $F(T)$.It is similar when $T \ge M$ and we can insert a certain number between the middle two numbers to make the array odd. \\
 \end{solution}
 \pagebreak
 
