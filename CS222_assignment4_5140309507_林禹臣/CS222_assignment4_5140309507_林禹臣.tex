@@ -142,7 +142,7 @@ return the length of the longest substring.
 \begin{solution}
 Intuitively, if there is no restraint k, we will first find out the most common char and replace all other char to the most common one to achieve the longest substring. Thus, the times of replacement will be $n-t$, assuming that the most common char occurs $t$ times. \\ \\ Now we have a restriction that the time of replacement should be less than or equal to $k$. Accordingly, we can conclude that if the original substring of the final result substring is $s[L,H]$ then we have $H-L-t \le k$.\\ \\
 Thus, our task is to find the largest $H-L$ satisfying hat $H-L-t \le k$. It is a typical Sliding Window Problem. We can consider $[L,H]$ is a window which satisfies the condition. We always intend to expand this window and return the largest length as the output result. Specifically, we just iterate the $H$ from $0$ to $N$, and in each loop we try to keep expand the windows according to the condition and if the condition cannot be satisfied we just need to increase our $L$.\\ \\
-As to the time complexity, we can find that it's evidently $O(n)$ for it only have one layer loop.
+As to the time complexity, we can find that it's evidently $O(n)$ for it only has one layer loop.
 \\ Python code is as follows:
 
 
